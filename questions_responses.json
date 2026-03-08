@@ -1,0 +1,26 @@
+{
+    "question": [
+        {"question_key": "01", "n": "1", "text": "In the past 2 weeks, I have generally felt supported and and encouraged by others."},
+        {"question_key": "02", "n": "2", "text": "In the past 2 weeks, I have often been hard on myself."},
+        {"question_key": "03", "n": "3", "text": "In the past 2 weeks, I have often felt proud of my creative achievements."},
+        {"question_key": "04", "n": "4", "text": "In the past 2 weeks, I have generally felt like I belong and have friends."},
+        {"question_key": "05", "n": "5", "text": "In the past 2 weeks, I have generally felt sad."},
+        {"question_key": "06", "n": "6", "text": "In the past 2 weeks, I have generally helped create places where people feel welcome."},
+        {"question_key": "07", "n": "7", "text": "In the past 2 weeks, I have generally felt lonely."},
+        {"question_key": "08", "n": "8", "text": "In the past 2 weeks, I have often expressed myself creatively."},
+        {"question_key": "09", "n": "9", "text": "In the past 2 weeks, I have generally felt unispired and not motivated."},
+        {"question_key": "10", "n": "10", "text": "In the past 2 weeks, I have generally felt unfairly judged by others."},
+        {"question_key": "11", "n": "11", "text": "In the past 2 weeks, I have generally had a shared sense of joy with people around me."},
+        {"question_key": "12", "n": "12", "text": "In the past 2 weeks, I have generally felt that people appreciated my culture."},
+        {"question_key": "13", "n": "13", "text": "In the past 2 weeks, I have generally felt confident around others."},
+        {"question_key": "14", "n": "14", "text": "How do you feel about taking part in this programme?"},
+        {"question_key": "15", "n": "15", "text": "Is there anything else that we should know?"}
+    ],
+    "response": {
+        "1": "Strongly disagree",
+        "2": "Disagree",
+        "3": "Neither agree nor disagree",
+        "4": "Agree",
+        "5": "Strongly agree"
+    }
+}

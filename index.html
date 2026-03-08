@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellbeing Scale - Consent Form</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            padding-bottom: 150px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+        
+        .images-container {
+            margin-bottom: 20px;
+        }
+        
+        .images-container img {
+            width: 100%;
+            height: auto;
+            object-fit: contain;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .content {
+            margin-bottom: 30px;
+            color: #555;
+        }
+        
+        .content h2 {
+            color: #333;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+        
+        .content p {
+            margin-bottom: 15px;
+        }
+        
+        .consent-section {
+            background-color: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            border-left: 4px solid #007bff;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #fff;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .checkbox-container:hover {
+            border-color: #007bff;
+            background-color: #f8f9ff;
+        }
+        
+        .checkbox-container input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-top: 2px;
+            flex-shrink: 0;
+        }
+        
+        .checkbox-container label {
+            cursor: pointer;
+            color: #333;
+            font-size: 16px;
+            user-select: none;
+        }
+        
+        .input-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .input-group label {
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+        }
+        
+        .input-group input[type="text"] {
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input[type="text"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+        
+        .input-group input[type="text"]:read-only {
+            background-color: #f0f0f0;
+            cursor: not-allowed;
+            color: #666;
+        }
+        
+        .input-group input[type="text"]:read-only:focus {
+            border-color: #dee2e6;
+            box-shadow: none;
+        }
+        
+        .start-button {
+            display: block;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 18px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            background-color: #6c757d;
+            border: none;
+            border-radius: 50px;
+            cursor: not-allowed;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .start-button.enabled {
+            background-color: #007bff;
+            cursor: pointer;
+        }
+        
+        .start-button.enabled:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        .start-button.enabled:active {
+            transform: translateY(0);
+        }
+        
+        .footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            margin-top: 60px;
+            padding-top: 30px;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -35%);
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            z-index: 2000;
+            text-align: center;
+            color: #007bff;
+            font-weight: 600;
+        }
+        
+        .loading::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0);
+            z-index: -1;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-top: 1px solid #dee2e6;
+            z-index: 999;
+        }
+        
+        .footer img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .images-container {
+                margin-bottom: 15px;
+            }
+            
+            .footer {
+                gap: 20px;
+                padding: 15px;
+            }
+            
+            .footer img {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        
+        <div class="images-container">
+            <img src="images/img_a.png" alt="Title image">
+        </div>
+        
+        <div class="images-container">
+            <img src="images/img_d.png" alt="Instructions image">
+        </div>
+        
+        <div class="content">
+            <h2>About this study</h2>
+            <p>
+                Participation is voluntary and anonymous. You can skip any item and stop at any time.
+            </p>
+        </div>
+
+        <div class="input-container">
+            <div class="input-group">
+                <label for="organizationId">Organization ID</label>
+                <input type="text" id="organizationId" placeholder="Enter your Organization ID" value="AKfycbyTp64au0R_e5BVJ5RZq0-S7JmEwuyBep5M5t9qHsoyYCzrdHQaCAvzE8r2lOlT96sw">
+            </div>
+            <div class="input-group">
+                <label for="userId">User ID</label>
+                <input type="text" id="userId" placeholder="Enter your User ID">
+            </div>
+        </div>
+
+        <div class="checkbox-container" onclick="toggleCheckbox(event)">
+            <input type="checkbox" id="consentCheckbox" onchange="updateButton()">
+            <label for="consentCheckbox">
+                I consent to take part and understand my anonymous responses will be used for research and evaluation.
+            </label>
+        </div>
+        
+        <button class="start-button" id="startButton" onclick="startQuestionnaire()" disabled>
+            Start Questionnaire
+        </button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            Loading...
+        </div>
+        
+        <div class="footer">
+            <img src="images/logo_brunel.png" alt="Brunel University London">
+            <img src="images/logo_southbank_centre.png" alt="Southbank Centre">
+            <img src="images/logo_kinetika.png" alt="Kinetika">
+        </div>
+    </div>
+    
+    <script>
+        // Initialize the page and populate fields from URL parameters or sessionStorage
+        function initializePage() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const orgUrl = urlParams.get('org');
+            const userUrl = urlParams.get('user');
+            
+            // Try to get stored values from sessionStorage
+            let userResponses = {};
+            try {
+                const stored = sessionStorage.getItem('userResponses');
+                if (stored) {
+                    userResponses = JSON.parse(stored);
+                }
+            } catch (e) {
+                console.error('Error reading sessionStorage:', e);
+            }
+            
+            // Initialize Organization ID
+            const orgInput = document.getElementById('organizationId');
+            if (orgUrl) {
+                orgInput.value = orgUrl;
+                orgInput.readOnly = true;
+                userResponses.organizationId = orgUrl;
+            } else if (userResponses.organizationId) {
+                orgInput.value = userResponses.organizationId;
+                orgInput.readOnly = false;
+            }
+            
+            // Initialize User ID
+            const userInput = document.getElementById('userId');
+            if (userUrl) {
+                userInput.value = userUrl;
+                userInput.readOnly = true;
+                userResponses.userId = userUrl;
+            } else if (userResponses.userId) {
+                userInput.value = userResponses.userId;
+                userInput.readOnly = false;
+            }
+            
+            // Update sessionStorage with the values (URL params will overwrite if present)
+            if (orgUrl || userUrl) {
+                sessionStorage.setItem('userResponses', JSON.stringify(userResponses));
+            }
+            
+            // Initialize consent checkbox
+            const consentCheckbox = document.getElementById('consentCheckbox');
+            if (userResponses.consent === true) {
+                consentCheckbox.checked = true;
+                updateButton();
+            }
+        }
+        
+        // Call initialization when page loads
+        window.addEventListener('DOMContentLoaded', initializePage);
+        
+        function toggleCheckbox(event) {
+            // Only toggle if clicking on the container itself, not checkbox or label
+            if (event && (event.target.id === 'consentCheckbox' || event.target.tagName === 'LABEL')) {
+                return;
+            }
+            const checkbox = document.getElementById('consentCheckbox');
+            checkbox.checked = !checkbox.checked;
+            updateButton();
+        }
+        
+        function updateButton() {
+            const checkbox = document.getElementById('consentCheckbox');
+            const button = document.getElementById('startButton');
+            
+            if (checkbox.checked) {
+                button.classList.add('enabled');
+                button.disabled = false;
+            } else {
+                button.classList.remove('enabled');
+                button.disabled = true;
+            }
+        }
+        
+        function startQuestionnaire() {
+            const checkbox = document.getElementById('consentCheckbox');
+            if (checkbox.checked) {
+                const organizationId = document.getElementById('organizationId').value;
+                const userId = document.getElementById('userId').value;
+                
+                // Get existing responses from sessionStorage
+                let userResponses = {};
+                try {
+                    const stored = sessionStorage.getItem('userResponses');
+                    if (stored) {
+                        userResponses = JSON.parse(stored);
+                    }
+                } catch (e) {
+                    console.error('Error reading sessionStorage:', e);
+                }
+                
+                // Update only the consent page fields, preserve all other answers
+                userResponses.organizationId = organizationId;
+                userResponses.userId = userId;
+                userResponses.consent = true;
+                userResponses.consent_timestamp = new Date().toISOString();
+                
+                sessionStorage.setItem('userResponses', JSON.stringify(userResponses));
+
+                // Show spinner and navigate to questionnaire page
+                document.getElementById('loading').style.display = 'block';
+                setTimeout(() => {
+                    window.location.href = 'questionnaire.html';
+                }, 100);
+            }
+        }
+    </script>
+</body>
+</html>

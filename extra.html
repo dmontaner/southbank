@@ -1,0 +1,644 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellbeing Scale - Feedback</title>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            overflow-x: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+        }
+        
+        .page {
+            display: none;
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        
+        .page.active {
+            display: flex;
+        }
+        
+        .image-container {
+            position: relative;
+            max-width: 100%;
+            max-height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .page img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+        
+        .vignette {
+            position: absolute;
+            /* background-color: rgba(255, 0, 0, 0.3);
+            border: 2px solid rgba(255, 0, 0, 0.8); */
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .vignette:hover {
+            /* background-color: rgba(255, 0, 0, 0.5);
+            border-color: rgba(255, 0, 0, 1); */
+        }
+        
+        .vignette.filled {
+            /* background-color: rgba(0, 200, 100, 0.3);
+            border: 2px solid rgba(0, 200, 100, 0.8); */
+        }
+        
+        .vignette.filled:hover {
+            /* background-color: rgba(0, 200, 100, 0.5);
+            border-color: rgba(0, 200, 100, 1); */
+        }
+        
+        .vignette.filled .vignette-hint {
+            display: none;
+        }
+        
+        .vignette-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #333;
+            font-size: 18px;
+            font-family: 'Caveat', cursive;
+            line-height: 1.6;
+            text-align: center;
+            max-width: 85%;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            display: none;
+            pointer-events: none;
+            font-weight: 700;
+            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.8);
+        }
+        
+        .vignette-text.visible {
+            display: block;
+        }
+        
+        .nav-btn {
+            position: fixed;
+            bottom: 120px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            z-index: 1000;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        
+        .nav-btn:hover {
+            background-color: rgba(0, 0, 0, 0.9);
+            transform: scale(1.05);
+        }
+        
+        .nav-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .prev-btn {
+            left: 30px;
+        }
+        
+        .next-btn {
+            right: 30px;
+        }
+        
+        .submit-btn {
+            right: 30px;
+            background-color: rgba(0, 123, 255, 0.8);
+        }
+        
+        .submit-btn:hover {
+            background-color: rgba(0, 123, 255, 0.95);
+        }
+        
+        .page-counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 16px;
+            z-index: 1000;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal.active {
+            display: flex;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            width: 90%;
+            max-width: 500px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .close-btn:hover {
+            color: #333;
+        }
+        
+        .modal textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-family: inherit;
+            font-size: 16px;
+            resize: vertical;
+            min-height: 120px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        
+        .modal-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .modal-btn.save {
+            background-color: #007bff;
+            color: white;
+        }
+        
+        .modal-btn.save:hover {
+            background-color: #0056b3;
+        }
+        
+        .modal-btn.cancel {
+            background-color: #ddd;
+            color: #333;
+        }
+        
+        .modal-btn.cancel:hover {
+            background-color: #bbb;
+        }
+        
+        /* Touch swipe support */
+        .page {
+            touch-action: pan-y;
+        }
+        
+        .loading {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -35%);
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            z-index: 2000;
+            text-align: center;
+            color: #007bff;
+            font-weight: 600;
+        }
+        
+        .loading::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0);
+            z-index: -1;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 767px) {
+            .page {
+                padding: 10px;
+            }
+            
+            .nav-btn {
+                bottom: 110px;
+                padding: 12px 24px;
+                font-size: 16px;
+            }
+            
+            .prev-btn {
+                left: 20px;
+            }
+            
+            .next-btn {
+                right: 20px;
+            }
+            
+            .submit-btn {
+                right: 20px;
+            }
+            
+            .page-counter {
+                top: 15px;
+                right: 15px;
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-top: 1px solid #dee2e6;
+            z-index: 999;
+        }
+        
+        .footer img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        .page {
+            padding-bottom: 150px;
+        }
+        
+        @media (max-width: 767px) {
+            .footer {
+                gap: 20px;
+                padding: 15px;
+            }
+            
+            .footer img {
+                height: 40px;
+            }
+            
+            .page {
+                padding-bottom: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-counter" id="pageCounter"></div>
+    <button class="nav-btn prev-btn" id="prevBtn" onclick="previousPage()">← Previous</button>
+    <button class="nav-btn next-btn" id="nextBtn" onclick="nextPage()">Next →</button>
+    <button class="nav-btn submit-btn" id="submitBtn" onclick="goToSend()" style="display: none;">Review →</button>
+    
+    <div id="pagesContainer"></div>
+    
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        Loading...
+    </div>
+    
+    <!-- Text Input Modal -->
+    <div id="textModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Add Text</h2>
+                <button class="close-btn" onclick="closeModal()">✕</button>
+            </div>
+            <textarea id="textInput" placeholder="Enter your text here..."></textarea>
+            <div class="modal-buttons">
+                <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+                <button class="modal-btn save" onclick="saveVignetteText()">Save</button>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer">
+        <img src="images/logo_brunel.png" alt="Brunel University London">
+        <img src="images/logo_southbank_centre.png" alt="Southbank Centre">
+        <img src="images/logo_kinetika.png" alt="Kinetika">
+    </div>
+
+    <script>
+
+        // init pages
+        let currentPage = 0;
+        let startX = null;
+        let startY = null;
+        let currentVignetteId = null;
+        
+        const userResponses = JSON.parse(sessionStorage.getItem('userResponses')) || {};
+      
+        // image filenames here
+        const images = [
+            'images/img14.png',
+            'images/img15.png',
+        ];
+        
+        // Define vignettes for each image (single vignette covering the whole image with margin)
+        const vignetteConfigs = [
+            // Image 14 - single vignette
+            [
+                { id: '14', left: '40%', top: '30%', width: '50%', height: '60%' },
+            ],
+            // Image 15 - single vignette
+            [
+                { id: '15', left: '30%', top: '30%', width: '60%', height: '65%' },
+            ],
+        ];
+
+        // Initialize pages
+        const container = document.getElementById('pagesContainer');
+        images.forEach((img, index) => {
+            const page = document.createElement('div');
+            page.className = 'page';
+            page.id = `page-${index}`;
+            
+            let vignettesHtml = '';
+            if (vignetteConfigs[index]) {
+                vignettesHtml = vignetteConfigs[index].map(config => {
+                    const hasText = userResponses[config.id];
+                    const filledClass = hasText ? ' filled' : '';
+                    const textVisibleClass = hasText ? ' visible' : '';
+                    return `
+                    <div class="vignette${filledClass}"
+                         id="${config.id}"
+                         style="left: ${config.left}; top: ${config.top}; width: ${config.width}; height: ${config.height};"
+                         onclick="openModal('${config.id}')">
+                        <div class="vignette-hint">✏️ Click to add text</div>
+                        <div class="vignette-text${textVisibleClass}" id="text-${config.id}">${hasText || ''}</div>
+                    </div>
+                    `;
+                }).join('');
+            }
+            
+            page.innerHTML = `
+            <div class="image-container">
+                <img src="${img}" alt="Page ${index + 1}">
+                ${vignettesHtml}
+            </div>
+        `;
+            container.appendChild(page);
+        });
+    
+        // Check for page parameter in URL
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageParam = urlParams.get('page');
+        const startPage = pageParam ? parseInt(pageParam) - 14 : 0;
+        
+        // Show specified page or first page
+        showPage(startPage);
+        
+        // Modal functions
+        function openModal(vignetteId) {
+            currentVignetteId = vignetteId;
+            const textInput = document.getElementById('textInput');
+            textInput.value = userResponses[vignetteId] || '';
+            document.getElementById('textModal').classList.add('active');
+            textInput.focus();
+        }
+        
+        function closeModal() {
+            document.getElementById('textModal').classList.remove('active');
+            currentVignetteId = null;
+        }
+        
+        function saveVignetteText() {
+            const text = document.getElementById('textInput').value.trim();
+            
+            if (currentVignetteId) {
+                userResponses[currentVignetteId] = text;
+                sessionStorage.setItem('userResponses', JSON.stringify(userResponses));
+                
+                // Update vignette visual state
+                const vignetteEl = document.getElementById(currentVignetteId);
+                const textEl = document.getElementById(`text-${currentVignetteId}`);
+                
+                if (text) {
+                    vignetteEl.classList.add('filled');
+                    textEl.textContent = text;
+                    textEl.classList.add('visible');
+                } else {
+                    vignetteEl.classList.remove('filled');
+                    textEl.classList.remove('visible');
+                    textEl.textContent = '';
+                }
+                
+                console.log(`Saved vignette ${currentVignetteId}:`, text);
+            }
+            
+            closeModal();
+        }
+        
+        // Navigate to send.html for review and submission
+        function goToSend() {
+            document.getElementById('loading').style.display = 'block';
+            setTimeout(() => {
+                window.location.href = 'send.html';
+            }, 100);
+        }
+
+        function showPage(index) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            // Show current page
+            document.getElementById(`page-${index}`).classList.add('active');
+            currentPage = index;
+            updateCounter();
+            updateButton();
+        }
+        
+        function nextPage() {
+            if (currentPage < images.length - 1) {
+                showPage(currentPage + 1);
+            }
+        }
+        
+        function previousPage() {
+            if (currentPage > 0) {
+                showPage(currentPage - 1);
+            } else {
+                // Go back to image 13 in questionnaire page
+                window.location.href = 'questionnaire.html?page=13';
+            }
+        }
+        
+        function updateCounter() {
+            const counter = document.getElementById('pageCounter');
+            counter.textContent = `${currentPage + 1} / ${images.length}`;
+        }
+        
+        function updateButton() {
+            const nextBtn = document.getElementById('nextBtn');
+            const prevBtn = document.getElementById('prevBtn');
+            const submitBtn = document.getElementById('submitBtn');
+            
+            // Hide/show next button and show submit on last page
+            if (currentPage === images.length - 1) {
+                nextBtn.style.display = 'none';
+                submitBtn.style.display = 'block';
+            } else {
+                nextBtn.style.display = 'block';
+                nextBtn.textContent = 'Next →';
+                submitBtn.style.display = 'none';
+            }
+            
+            // Always show previous button (it goes back to questionnaire on first page)
+            prevBtn.style.display = 'block';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('textModal').addEventListener('click', (e) => {
+            if (e.target.id === 'textModal') {
+                closeModal();
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (document.getElementById('textModal').classList.contains('active')) return;
+            
+            if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === 'PageDown' || e.key === ' ' || e.key === 'Enter') {
+                e.preventDefault();
+                nextPage();
+            }
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowUp' || e.key === 'PageUp') {
+                e.preventDefault();
+                previousPage();
+            }
+        });
+        
+        // Touch swipe navigation
+        document.addEventListener('touchstart', (e) => {
+            startX = e.touches[0].clientX;
+            startY = e.touches[0].clientY;
+        }, { passive: true });
+        
+        document.addEventListener('touchend', (e) => {
+            if (startX === null || startY === null) return;
+            
+            const endX = e.changedTouches[0].clientX;
+            const endY = e.changedTouches[0].clientY;
+            
+            const diffX = startX - endX;
+            const diffY = startY - endY;
+            
+            // Only trigger if horizontal swipe is more significant than vertical
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > 50) { // Minimum swipe distance
+                    if (diffX > 0) {
+                        // Swipe left - next page
+                        nextPage();
+                    } else {
+                        // Swipe right - previous page
+                        previousPage();
+                    }
+                }
+            }
+            
+            startX = null;
+            startY = null;
+        }, { passive: true });
+    </script>
+</body>
+</html>

@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wellbeing Scale - Review & Submit</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f8f9fa;
+            padding: 20px;
+            padding-bottom: 150px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+        }
+        
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 28px;
+        }
+        
+        .review-section {
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        .review-section:last-child {
+            border-bottom: none;
+        }
+        
+        .review-section h2 {
+            color: #007bff;
+            font-size: 18px;
+            margin-bottom: 15px;
+            font-weight: 600;
+        }
+        
+        .review-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            color: #555;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .review-item:last-child {
+            border-bottom: none;
+        }
+        
+        .review-item strong {
+            color: #333;
+            margin-right: 15px;
+            min-width: 200px;
+            font-weight: 600;
+        }
+        
+        .review-item span {
+            text-align: right;
+            flex-grow: 1;
+            word-break: break-word;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 40px;
+        }
+        
+        .back-btn, .submit-btn {
+            padding: 15px 40px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .back-btn {
+            background-color: #6c757d;
+            color: white;
+        }
+        
+        .back-btn:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        .submit-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .submit-btn:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+        }
+        
+        .submit-btn:active, .back-btn:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            display: none;
+            position: fixed;
+            top: 35%;
+            left: 50%;
+            transform: translate(-50%, -35%);
+            background-color: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            z-index: 1000;
+            text-align: center;
+            color: #007bff;
+            font-weight: 600;
+        }
+        
+        .loading::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0);
+            z-index: -1;
+        }
+        
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #007bff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 20px;
+            border-top: 1px solid #dee2e6;
+            z-index: 999;
+        }
+        
+        .footer img {
+            height: 50px;
+            width: auto;
+            object-fit: contain;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 24px;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+            }
+            
+            .back-btn, .submit-btn {
+                width: 100%;
+            }
+            
+            .review-item {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .review-item strong {
+                min-width: auto;
+            }
+            
+            .review-item span {
+                text-align: left;
+            }
+            
+            .footer {
+                gap: 20px;
+                padding: 15px;
+            }
+            
+            .footer img {
+                height: 40px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Review Your Responses</h1>
+        
+        <div class="review-section">
+            <h2>Participant Information</h2>
+            <div class="review-item">
+                <strong>Organization ID:</strong>
+                <span id="reviewOrgId">-</span>
+            </div>
+            <div class="review-item">
+                <strong>User ID:</strong>
+                <span id="reviewUserId">-</span>
+            </div>
+            <div class="review-item">
+                <strong>Consent Given:</strong>
+                <span id="reviewConsent">-</span>
+            </div>
+            <!-- <div class="review-item">
+                <strong>Consent Timestamp:</strong>
+                <span id="reviewTimestamp">-</span>
+            </div> -->
+        </div>
+        
+        <div class="review-section" id="answersSection">
+            <h2>Your Answers</h2>
+            <div id="answersContainer"></div>
+        </div>
+        
+        <div class="nav-buttons">
+            <button class="back-btn" onclick="goBack()">← Back to Questionnaire</button>
+            <button class="submit-btn" id="submitBtn" onclick="submitResponses()">Submit All Responses</button>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            Submitting your responses...
+        </div>
+    </div>
+    
+    <div class="footer">
+        <img src="images/logo_brunel.png" alt="Brunel University London">
+        <img src="images/logo_southbank_centre.png" alt="Southbank Centre">
+        <img src="images/logo_kinetika.png" alt="Kinetika">
+    </div>
+    
+    <script>
+        let userResponses = {};
+        let questionsData = {};
+        
+        // Load responses from sessionStorage
+        function loadResponses() {
+            try {
+                const stored = sessionStorage.getItem('userResponses');
+                if (stored) {
+                    userResponses = JSON.parse(stored);
+                }
+            } catch (e) {
+                console.error('Error reading sessionStorage:', e);
+            }
+        }
+        
+        // Load questions and responses from JSON file
+        async function loadQuestionsData() {
+            try {
+                const response = await fetch('questions_responses.json');
+                questionsData = await response.json();
+            } catch (e) {
+                console.error('Error loading questions data:', e);
+            }
+        }
+        
+        // Get question text from question number
+        function getQuestionText(questionNum) {
+            if (Array.isArray(questionsData.question)) {
+                const questionData = questionsData.question.find(q => q.n === String(questionNum) || q.question_key === String(questionNum).padStart(2, '0'));
+                if (questionData) {
+                    return `${questionData.n}. ${questionData.text}`;
+                }
+            }
+            return `Question ${questionNum}`;
+        }
+        
+        // Get response text from response code
+        function getResponseText(responseCode) {
+            return questionsData.response?.[responseCode] || responseCode;
+        }
+        
+        // Populate the review page
+        function populateReview() {
+            loadResponses();
+            
+            // Populate participant information
+            document.getElementById('reviewOrgId').textContent = userResponses.organizationId || '-';
+            document.getElementById('reviewUserId').textContent = userResponses.userId || '-';
+            document.getElementById('reviewConsent').textContent = userResponses.consent ? 'Yes' : 'No';
+            
+            // Format and display timestamp
+            // if (userResponses.consent_timestamp) {
+            //     const date = new Date(userResponses.consent_timestamp);
+            //     document.getElementById('reviewTimestamp').textContent = date.toLocaleString();
+            // } else {
+            //     document.getElementById('reviewTimestamp').textContent = '-';
+            // }
+            
+            // Populate answers - show all questions from JSON
+            const answersContainer = document.getElementById('answersContainer');
+            answersContainer.innerHTML = '';
+            
+            // Iterate through all questions in the JSON file (array format)
+            if (Array.isArray(questionsData.question)) {
+                questionsData.question.forEach((questionData) => {
+                    const answerDiv = document.createElement('div');
+                    answerDiv.className = 'review-item';
+                    
+                    // Get question text
+                    const questionText = `${questionData.n}. ${questionData.text}`;
+                    
+                    // Check if answer exists for this question using question_key
+                    const questionKey = questionData.question_key;
+                    let responseText = '';
+                    let isNotResponded = false;
+                    
+                    if (userResponses[questionKey] !== undefined && userResponses[questionKey] !== null) {
+                        responseText = getResponseText(userResponses[questionKey]);
+                    } else {
+                        responseText = 'NOT RESPONDED';
+                        isNotResponded = true;
+                    }
+                    
+                    // Create span with appropriate styling for not responded
+                    const responseSpan = document.createElement('span');
+                    responseSpan.textContent = responseText;
+                    if (isNotResponded) {
+                        responseSpan.style.color = 'red';
+                        responseSpan.style.fontWeight = 'bold';
+                    }
+                    
+                    answerDiv.innerHTML = `<strong>${questionText}:</strong>`;
+                    answerDiv.appendChild(responseSpan);
+                    answersContainer.appendChild(answerDiv);
+                });
+            }
+        }
+        
+        // Submit responses to API
+        async function submitResponses() {
+            const submitBtn = document.getElementById('submitBtn');
+            const loading = document.getElementById('loading');
+            
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            
+            try {
+                const DeploymentID = userResponses.organizationId
+                const SCRIPT_URL = `https://script.google.com/macros/s/${DeploymentID}/exec`;
+                console.log('Submitting to URL:', SCRIPT_URL);
+                
+                const formData = new FormData();
+                for (const [key, value] of Object.entries(userResponses)) {
+                    formData.append(key, value);
+                }
+                
+                const response = await fetch(SCRIPT_URL, {
+                    method: "POST",
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    console.log('Success:', result);
+                    // Clear session storage after successful submission
+                    sessionStorage.removeItem('userResponses');
+                    // Remove any error messages
+                    sessionStorage.removeItem('submissionError');
+                    // Redirect to done page
+                    window.location.href = 'done.html';
+                } else {
+                    throw new Error(result.error || 'Unknown error');
+                }
+            } catch (error) {
+                console.error('Error submitting responses:', error);
+                // Store error message in sessionStorage
+                sessionStorage.setItem('submissionError', error.message);
+                // Redirect to done page to display error
+                window.location.href = 'done.html';
+            }
+        }
+        
+        // Go back to questionnaire
+        function goBack() {
+            window.location.href = 'extra.html?page=15';
+        }
+        
+        // Initialize page on load
+        window.addEventListener('DOMContentLoaded', async function() {
+            await loadQuestionsData();
+            populateReview();
+        });
+    </script>
+</body>
+</html>
