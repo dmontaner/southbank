@@ -14,9 +14,9 @@ https://www.dmontaner.com/southbank/
 
 1. Add the following column headers in the first row:
 
-```
-timestamp consent_timestamp consent organizationId userId q01 q02 q03 q04 q05 q06 q07 q08 q09 q10 q11 q12 q13 q14 q15
-```
+
+|timestamp|consent_timestamp|consent|organizationId|userId|q01|q02|q03|q04|q05|q06|q07|q08|q09|q10|q11|q12|q13|q14|q15|
+
 
 1. Then, in the top menu, go to `Extensions > Apps Scripts`.
 1. Copy the code below in the __Code.gs__ editor (remove any prior code if it was in the editor).
