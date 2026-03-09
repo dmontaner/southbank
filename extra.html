@@ -7,7 +7,7 @@
     <!-- Prefetch next page and its key assets -->
     <link rel="prefetch" href="send2.html">
     <link rel="prefetch" href="questions_responses.json">
-    <link rel="prefetch" href="done.html">
+    <!-- <link rel="prefetch" href="done.html"> -->
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -429,7 +429,18 @@
         let currentVignetteId = null;
         
         const userResponses = JSON.parse(sessionStorage.getItem('userResponses')) || {};
-      
+
+        // Proactively fetch and cache questions data so send2.html doesn't need to
+        if (!sessionStorage.getItem('questionsData')) {
+            fetch('questions_responses.json')
+                .then(r => r.json())
+                .then(data => {
+                    sessionStorage.setItem('questionsData', JSON.stringify(data));
+                    console.log('questions_responses.json pre-cached in sessionStorage');
+                })
+                .catch(e => console.warn('Could not pre-cache questions data:', e));
+        }
+
         // image filenames here
         const images = [
             'images/img14.png',

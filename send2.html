@@ -363,11 +363,19 @@
             }
         }
         
-        // Load questions and responses from JSON file
+        // Load questions data from sessionStorage cache; fall back to network fetch if missing
         async function loadQuestionsData() {
             try {
-                const response = await fetch('questions_responses.json');
-                questionsData = await response.json();
+                const cached = sessionStorage.getItem('questionsData');
+                if (cached) {
+                    questionsData = JSON.parse(cached);
+                    console.log('questions data loaded from sessionStorage cache');
+                } else {
+                    console.log('questions data not cached, fetching from network...');
+                    const response = await fetch('questions_responses.json');
+                    questionsData = await response.json();
+                    sessionStorage.setItem('questionsData', JSON.stringify(questionsData));
+                }
             } catch (e) {
                 console.error('Error loading questions data:', e);
             }
