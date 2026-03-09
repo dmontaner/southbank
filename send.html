@@ -388,14 +388,37 @@
                     formData.append(key, value);
                 }
                 
-                const response = await fetch(SCRIPT_URL, {
+                // Create a timeout promise
+                const timeoutPromise = new Promise((_, reject) =>
+                    setTimeout(() => reject(new Error('Request timeout after 30 seconds')), 30000)
+                );
+                
+                const fetchPromise = fetch(SCRIPT_URL, {
                     method: "POST",
                     body: formData
                 });
                 
-                const result = await response.json();
+                const response = await Promise.race([fetchPromise, timeoutPromise]);
                 
-                if (response.ok) {
+                console.log('Response received, status:', response.status);
+                
+                let result;
+                try {
+                    const responseText = await response.text();
+                    console.log('Response text:', responseText);
+                    result = JSON.parse(responseText);
+                } catch (parseError) {
+                    console.error('Error parsing response:', parseError);
+                    // If we got a 200 response, treat as success even if response is malformed
+                    if (response.status === 200 || response.ok) {
+                        console.log('Status is OK, treating as success despite parse error');
+                        result = {status: "ok"};
+                    } else {
+                        throw new Error('Invalid response format: ' + parseError.message);
+                    }
+                }
+                
+                if (response.ok || result.status === 'ok') {
                     console.log('Success:', result);
                     // Clear session storage after successful submission
                     sessionStorage.removeItem('userResponses');
@@ -404,7 +427,7 @@
                     // Redirect to done page
                     window.location.href = 'done.html';
                 } else {
-                    throw new Error(result.error || 'Unknown error');
+                    throw new Error(result.error || 'Server returned error');
                 }
             } catch (error) {
                 console.error('Error submitting responses:', error);
