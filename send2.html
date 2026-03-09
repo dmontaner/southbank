@@ -479,11 +479,17 @@
             const submitBtn = document.getElementById('submitBtn');
             const loading = document.getElementById('loading');
             
+            // Validate that an Organization ID (Deployment ID) is present before submitting
+            const DeploymentID = userResponses.organizationId;
+            if (!DeploymentID || DeploymentID.trim() === '') {
+                showDoneView(true, 'No Organization ID was provided. Please go back to the start page and enter a valid Organization ID. You may need to request a new valid URL from your organizatio.');
+                return;
+            }
+
             submitBtn.disabled = true;
             loading.style.display = 'block';
             
             try {
-                const DeploymentID = userResponses.organizationId
                 const SCRIPT_URL = `https://script.google.com/macros/s/${DeploymentID}/exec`;
                 console.log('Submitting to URL:', SCRIPT_URL);
                 
@@ -522,7 +528,7 @@
                     }
                 }
                 
-                if (response.ok || result.status === 'ok') {
+                if (response.ok && result.status === 'ok') {
                     console.log('Success:', result);
                     // Clear session storage after successful submission
                     sessionStorage.removeItem('userResponses');
