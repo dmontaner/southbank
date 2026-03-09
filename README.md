@@ -10,7 +10,7 @@ https://www.dmontaner.com/southbank/
 
 ## Set up for your own organization:
 
-1. Go to [Google Sheets](https://docs.google.com/spreadsheets/)and create a new blank spreadsheet.
+1. Go to [Google Sheets](https://docs.google.com/spreadsheets/) and create a new blank spreadsheet.
 
 1. Add the following column headers in the first row:
 
