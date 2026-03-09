@@ -547,6 +547,20 @@
             }
         }
         
+        // Warm up the Apps Script container in the background so it is ready
+        // by the time the user clicks Submit, avoiding cold start delays.
+        async function warmUpScript() {
+            try {
+                const DeploymentID = userResponses.organizationId;
+                if (!DeploymentID) return;
+                const SCRIPT_URL = `https://script.google.com/macros/s/${DeploymentID}/exec`;
+                await fetch(SCRIPT_URL, { method: 'GET' });
+                console.log('Apps Script warmed up');
+            } catch (e) {
+                // Silently ignore — this is best-effort only
+            }
+        }
+
         // Go back to questionnaire
         function goBack() {
             window.location.href = 'extra.html?page=15';
@@ -556,6 +570,7 @@
         window.addEventListener('DOMContentLoaded', async function() {
             await loadQuestionsData();
             populateReview();
+            warmUpScript(); // fire-and-forget: warms up the Apps Script container in background
         });
     </script>
 </body>
