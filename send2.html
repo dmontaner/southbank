@@ -4,8 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wellbeing Scale - Review & Submit</title>
-    <!-- Prefetch next page -->
-    <link rel="prefetch" href="done.html">
     <style>
         * {
             margin: 0;
@@ -164,6 +162,54 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        /* Done view styles */
+        .done-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 60px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            text-align: center;
+            display: none;
+        }
+
+        .success-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: scaleIn 0.6s ease-in-out;
+        }
+
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .done-container h1 {
+            color: #28a745;
+            font-size: 36px;
+        }
+
+        .message {
+            color: #555;
+            font-size: 18px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .secondary-message {
+            color: #888;
+            font-size: 16px;
+            margin-bottom: 40px;
+            font-style: italic;
+        }
         
         .footer {
             position: fixed;
@@ -215,6 +261,22 @@
             .review-item span {
                 text-align: left;
             }
+
+            .done-container {
+                padding: 40px 20px;
+            }
+
+            .done-container h1 {
+                font-size: 28px;
+            }
+
+            .message {
+                font-size: 16px;
+            }
+
+            .success-icon {
+                font-size: 60px;
+            }
             
             .footer {
                 gap: 20px;
@@ -228,7 +290,8 @@
     </style>
 </head>
 <body>
-    <div class="container">
+    <!-- Review view -->
+    <div class="container" id="reviewView">
         <h1>Review Your Responses</h1>
         
         <div class="review-section">
@@ -245,10 +308,6 @@
                 <strong>Consent Given:</strong>
                 <span id="reviewConsent">-</span>
             </div>
-            <!-- <div class="review-item">
-                <strong>Consent Timestamp:</strong>
-                <span id="reviewTimestamp">-</span>
-            </div> -->
         </div>
         
         <div class="review-section" id="answersSection">
@@ -265,6 +324,21 @@
             <div class="spinner"></div>
             Submitting your responses...
         </div>
+    </div>
+
+    <!-- Done view (hidden initially, shown after submission) -->
+    <div class="done-container" id="doneView">
+        <div class="success-icon" id="successIcon">✓</div>
+        
+        <h1 id="doneTitle">Thank You!</h1>
+        
+        <p class="message" id="doneMessage">
+            Your responses have been submitted successfully.
+        </p>
+        
+        <p class="secondary-message" id="doneSecondaryMessage">
+            We appreciate your participation in this important programme.
+        </p>
     </div>
     
     <div class="footer">
@@ -324,14 +398,6 @@
             document.getElementById('reviewUserId').textContent = userResponses.userId || '-';
             document.getElementById('reviewConsent').textContent = userResponses.consent ? 'Yes' : 'No';
             
-            // Format and display timestamp
-            // if (userResponses.consent_timestamp) {
-            //     const date = new Date(userResponses.consent_timestamp);
-            //     document.getElementById('reviewTimestamp').textContent = date.toLocaleString();
-            // } else {
-            //     document.getElementById('reviewTimestamp').textContent = '-';
-            // }
-            
             // Populate answers - show all questions from JSON
             const answersContainer = document.getElementById('answersContainer');
             answersContainer.innerHTML = '';
@@ -370,6 +436,34 @@
                     answersContainer.appendChild(answerDiv);
                 });
             }
+        }
+
+        // Switch from review view to done view
+        function showDoneView(isError, errorMessage) {
+            // Hide review, show done
+            document.getElementById('reviewView').style.display = 'none';
+            document.getElementById('doneView').style.display = 'block';
+
+            if (isError) {
+                document.getElementById('successIcon').textContent = '✕';
+                document.getElementById('successIcon').style.color = '#dc3545';
+                document.getElementById('doneTitle').textContent = 'Submission Error';
+                document.getElementById('doneTitle').style.color = '#dc3545';
+                document.getElementById('doneMessage').textContent = 'Unfortunately, there was an error submitting your responses:';
+
+                // Add error details
+                const errorDetails = document.createElement('p');
+                errorDetails.className = 'message';
+                errorDetails.style.color = '#dc3545';
+                errorDetails.style.fontWeight = 'bold';
+                errorDetails.textContent = errorMessage;
+                document.getElementById('doneMessage').parentNode.insertBefore(errorDetails, document.getElementById('doneMessage').nextSibling);
+
+                document.getElementById('doneSecondaryMessage').textContent = 'Please try again or contact support if the problem persists.';
+            }
+
+            // Scroll to top so the user sees the result
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
         // Submit responses to API
@@ -424,19 +518,18 @@
                     console.log('Success:', result);
                     // Clear session storage after successful submission
                     sessionStorage.removeItem('userResponses');
-                    // Remove any error messages
                     sessionStorage.removeItem('submissionError');
-                    // Redirect to done page
-                    window.location.href = 'done.html';
+                    // Show done view inline (no page reload)
+                    loading.style.display = 'none';
+                    showDoneView(false);
                 } else {
                     throw new Error(result.error || 'Server returned error');
                 }
             } catch (error) {
                 console.error('Error submitting responses:', error);
-                // Store error message in sessionStorage
-                sessionStorage.setItem('submissionError', error.message);
-                // Redirect to done page to display error
-                window.location.href = 'done.html';
+                loading.style.display = 'none';
+                // Show done view with error inline (no page reload)
+                showDoneView(true, error.message);
             }
         }
         

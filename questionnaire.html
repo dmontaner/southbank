@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wellbeing Scale - Questionnaire</title>
+    <!-- Prefetch next page and its key assets -->
+    <link rel="prefetch" href="extra.html">
+    <link rel="prefetch" href="images/img14.png">
+    <link rel="prefetch" href="images/img15.png">
     <style>
         * {
             margin: 0;
@@ -363,7 +367,7 @@
 
                 page.innerHTML = `
                 <div class="image-container">
-                    <img src="${img}" alt="Page ${index + 1}">
+                    <img src="${img}" alt="Page ${index + 1}" loading="${index === 0 ? 'eager' : 'lazy'}">
                     ${overlaysHtml}
                     ${starHtml}
                 </div>

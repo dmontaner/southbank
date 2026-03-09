@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Wellbeing Scale - Feedback</title>
+    <!-- Prefetch next page and its key assets -->
+    <link rel="prefetch" href="send2.html">
+    <link rel="prefetch" href="questions_responses.json">
+    <link rel="prefetch" href="done.html">
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -527,11 +531,11 @@
             closeModal();
         }
         
-        // Navigate to send.html for review and submission
+        // Navigate to send2.html for review and submission
         function goToSend() {
             document.getElementById('loading').style.display = 'block';
             setTimeout(() => {
-                window.location.href = 'send.html';
+                window.location.href = 'send2.html';
             }, 100);
         }
 
