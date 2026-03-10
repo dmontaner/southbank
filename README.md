@@ -34,14 +34,14 @@ https://www.dmontaner.com/southbank/
 1. Follow the Advanced link (unsafe) and Continue the process
 
 1. This will give you a "Deployment ID" that should look like:
-   `AKfycbyRjQzoteVqKpPvXQzw6Ej2NGMWcoGynwUJ2A1ULlK5ySQdYaI5JfK9k4gDRCYyV2weOg`
+   `AKfycbyKGzEErOO18-SMhQizdSs-N8Bp8TLbtTq993URkFa7weDBfT5sWnjtuim7BXWWGf3m`
    
 1. Then you can use the page as  
    `https://www.dmontaner.com/southbank/?org=Deployment-ID`
    for instance  
-   https://www.dmontaner.com/southbank/?org=AAKfycbyRjQzoteVqKpPvXQzw6Ej2NGMWcoGynwUJ2A1ULlK5ySQdYaI5JfK9k4gDRCYyV2weOg
+   https://www.dmontaner.com/southbank/?org=AKfycbyKGzEErOO18-SMhQizdSs-N8Bp8TLbtTq993URkFa7weDBfT5sWnjtuim7BXWWGf3m
    (new rows will be shown at:
-   <https://docs.google.com/spreadsheets/d/1N--NwnBmUIDLhIJzZz0mZ5Px4mLBmW4TQXnPpB6hm38/edit?gid=0#gid=0>)
+   <https://docs.google.com/spreadsheets/d/1N--NwnBmUIDLhIJzZz0mZ5Px4mLBmW4TQXnPpB6hm38/edit?usp=sharing>)
 
 
 
