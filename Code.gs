@@ -3,6 +3,11 @@ const DATA_SHEET_NAME = "Sheet1";
 const USERS_SHEET_NAME = "Users";
 const USERS_ID_COLUMN = "UserId";
 
+function sanitize(value) {
+    return String(value === null || value === undefined ? '' : value)
+        .replace(/^[=+\-@|]/, '');
+}
+
 function doGet(e) {
     return ContentService.createTextOutput(JSON.stringify({status: "ok", message: "warm"}))
         .setMimeType(ContentService.MimeType.JSON);
@@ -67,7 +72,7 @@ function doPost(e) {
         const ts = new Date();
         const row = [ts];
         for (let id of questionIds) {
-            row.push(data[id] || '');
+            row.push(sanitize(data[id] || ''));
         }
         sheet.appendRow(row);
         return ContentService.createTextOutput(JSON.stringify({status: "ok"}))
