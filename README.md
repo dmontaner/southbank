@@ -11,19 +11,12 @@ https://www.dmontaner.com/southbank/
 ## Set up for your own organization:
 
 1. Go to [Google Sheets](https://docs.google.com/spreadsheets/) and create a new blank spreadsheet.
-
-1. Add the following column headers in the first row:
-
-| timestamp | consent_timestamp | consent | organizationId | userId | q01 | q02 | q03 | q04 | q05 | q06 | q07 | q08 | q09 | q10 | q11 | q12 | q13 | q14 | q15 |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-
-
 1. Then, in the top menu, go to `Extensions > Apps Scripts`.
-1. Copy the code below in the __Code.gs__ editor (remove any prior code if it was in the editor).
+1. Copy the code below in
+   [file Code.gs](https://raw.githubusercontent.com/dmontaner/southbank/refs/heads/main/Code.gs)
+   to the __Code.gs__ editor (remove any prior code if it was in the editor).
 1. Save the project to Drive (save icon).
 1. Click the button `Deploy > New deployment`.
-
-
 1. Go to the Select type > Web app
 1. In the section __"Who has access"__ select "Anyone".
 1. Click Deploy.
