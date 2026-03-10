@@ -1,119 +1,65 @@
-# southbank
+# Southbank
 
-This repository implements a light web site to serve the
-__"Southbank centre creative community wellbeing scale"__.
+A lightweight web questionnaire for the
+**"Southbank Centre Creative Community Wellbeing Scale"**.
 
-
-The web site can be seen at: 
-https://www.dmontaner.com/southbank/
+Live site: https://www.dmontaner.com/southbank/
 
 
-## Set up for your own organization:
+## Set up for your own organization
 
-1. Go to [Google Sheets](https://docs.google.com/spreadsheets/) and create a new blank spreadsheet.
-1. Then, in the top menu, go to `Extensions > Apps Scripts`.
-1. Copy the code below in
-   [file Code.gs](https://raw.githubusercontent.com/dmontaner/southbank/refs/heads/main/Code.gs)
-   to the __Code.gs__ editor (remove any prior code if it was in the editor).
-1. Save the project to Drive (save icon).
-1. Click the button `Deploy > New deployment`.
-1. Go to the Select type > Web app
-1. In the section __"Who has access"__ select "Anyone".
-1. Click Deploy.
+### 1. Create a Google Sheet
 
-1. Then "The Web App requires you to authorize access to your data." > "Authorize access"
+Go to [Google Sheets](https://docs.google.com/spreadsheets/) and create a new blank spreadsheet.
 
-1. There will be a warning message: "Google hasn’t verified this app"
-1. Follow the Advanced link (unsafe) and Continue the process
+### 2. Add the Apps Script backend
 
-1. This will give you a "Deployment ID" that should look like:
+1. In your spreadsheet, go to **Extensions → Apps Script**.
+2. Delete any existing code in the `Code.gs` editor.
+3. Copy the contents of [Code.gs](https://raw.githubusercontent.com/dmontaner/southbank/refs/heads/main/Code.gs) and paste it in.
+4. Save (Ctrl+S or the floppy-disk icon).
+
+### 3. Deploy as a Web App
+
+1. Click **Deploy → New deployment**.
+2. Click the gear icon next to "Select type" and choose **Web app**.
+3. Set **Execute as:** Me (your Google account).
+4. Set **Who has access:** Anyone.
+5. Click **Deploy**.
+6. Google will ask you to authorize the app:
+   - Click **Authorize access**.
+   - If you see *"Google hasn't verified this app"*, click **Advanced** → **Go to [project name] (unsafe)**.
+   - Review the permissions and click **Allow**.
+7. Copy the **Deployment ID** — it looks like:
    `AKfycbyKGzEErOO18-SMhQizdSs-N8Bp8TLbtTq993URkFa7weDBfT5sWnjtuim7BXWWGf3m`
-   
-1. Then you can use the page as  
-   `https://www.dmontaner.com/southbank/?org=Deployment-ID`
-   for instance  
-   https://www.dmontaner.com/southbank/?org=AKfycbyKGzEErOO18-SMhQizdSs-N8Bp8TLbtTq993URkFa7weDBfT5sWnjtuim7BXWWGf3m
-   (new rows will be shown at:
-   <https://docs.google.com/spreadsheets/d/1N--NwnBmUIDLhIJzZz0mZ5Px4mLBmW4TQXnPpB6hm38/edit?usp=sharing>)
 
+### 4. Use the questionnaire
 
-
-__Code.gs__
-
+Share the URL with your Deployment ID as the `org` parameter:
 
 ```
-function doPost(e) {
-    try {
-        const data = e.parameter; // Form data comes in as parameters, not postData
-        const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
-        const ts = new Date();
-        const row = [ts];
-        const questionIds = [
-            "consent_timestamp",
-            "consent",
-            "organizationId",
-            "userId",
-            "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15"];
-        for (let id of questionIds) {
-            row.push(data[id] || '');
-        }
-        sheet.appendRow(row);
-        return ContentService.createTextOutput(JSON.stringify({status: "ok"}))
-            .setMimeType(ContentService.MimeType.JSON)
-            .setHeaders({
-                'Access-Control-Allow-Origin': '*',
-                'Access-Control-Allow-Methods': 'POST, OPTIONS',
-                'Access-Control-Allow-Headers': 'Content-Type'
-            });
-    } catch (err) {
-        return ContentService.createTextOutput(JSON.stringify({status: "error", error: err.toString()}))
-            .setMimeType(ContentService.MimeType.JSON);
-    }
-}
+https://www.dmontaner.com/southbank/?org=YOUR_DEPLOYMENT_ID
 ```
 
+You can also pre-fill the User ID by adding a `user` parameter:
 
-Here's how to use this Google Apps Script with Google Sheets:
+```
+https://www.dmontaner.com/southbank/?org=YOUR_DEPLOYMENT_ID&user=USER_ID
+```
 
-**1. Set up the Google Sheet:**
-   - Open Google Sheets and create a new spreadsheet
-   - Create a sheet named `"Responses"` (the script looks for this exact name)
-   - Add column headers in the first row:
-     - Column A: Timestamp
-     - Column B: Consent
-     - Column C: Consent Timestamp
-     - Columns D-R: q01, q02, q03, ... q15
+Examples:
+https://www.dmontaner.com/southbank/?org=AKfycbyKGzEErOO18-SMhQizdSs-N8Bp8TLbtTq993URkFa7weDBfT5sWnjtuim7BXWWGf3m
+https://www.dmontaner.com/southbank/?org=AKfycbyKGzEErOO18-SMhQizdSs-N8Bp8TLbtTq993URkFa7weDBfT5sWnjtuim7BXWWGf3m&user=david
 
-**2. Add the script to Google Sheets:**
-   - In your Google Sheet, go to **Extensions → Apps Script**
-   - Delete any default code and paste your script
-   - Save it
+Responses are written to your Google Sheet automatically.
+Example sheet: <https://docs.google.com/spreadsheets/d/1N--NwnBmUIDLhIJzZz0mZ5Px4mLBmW4TQXnPpB6hm38/edit?usp=sharing>
 
-**3. Deploy as a Web App:**
-   - Click **Deploy** → **New deployment**
-   - Select **Type: Web app**
-   - Set **Execute as:** your Google account
-   - Set **Who has access:** Anyone (or "Anyone with the link")
-   - Click **Deploy**
+### 5. (Optional) Restrict access by user ID
 
-HERE GOOGLE ASKS FOR AUTHORIZATION
+To allow only specific users to submit responses:
 
-   - Copy the deployment URL (looks like: `https://script.google.com/macros/s/AKfycbw7.../exec`)
+1. In your Google Sheet, create a second sheet named **`Users`**.
+2. Add a column header **`UserId`** in cell A1.
+3. List one allowed user ID per row below the header.
 
-   https://script.google.com/macros/s/AKfycbyyT38aR6S0JfMK24m64pJuYPca9WvVN9p1--NSCioCsU_CDQvKVaQgppHrS0Y4SQ0G/exec
-
-**4. Use the URL in your questionnaire:**
-   - Replace the `SCRIPT_URL` in your questionnaire.html with the deployment URL you just copied
-   - When users submit, the POST request sends the JSON data to this URL
-   - The script automatically parses it and appends a new row to your "Responses" sheet
-
-**That's it!** Each submission will add a new row with all the response data.
-
-
-User Journey 
-
-1. index.html
-1. questionnaire.html
-1. extras.html
-1. send.html
-1. done.html
+If no `Users` sheet exists, all user IDs are accepted.
