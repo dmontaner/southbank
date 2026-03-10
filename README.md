@@ -47,12 +47,14 @@ You can also pre-fill the User ID by adding a `user` parameter:
 https://www.dmontaner.com/southbank/?org=YOUR_DEPLOYMENT_ID&user=USER_ID
 ```
 
-Examples:
+Example without user id:  
 https://www.dmontaner.com/southbank/?org=AKfycbxbYlGknELKkwceKtffzaMlPbWKK87uo4GMGwXZ9-2APVFL6rf2hB8dVIPoWeV-3UfcNg
+
+Example with user id:  
 https://www.dmontaner.com/southbank/?org=AKfycbxbYlGknELKkwceKtffzaMlPbWKK87uo4GMGwXZ9-2APVFL6rf2hB8dVIPoWeV-3UfcNg&user=david
 
-Responses are written to your Google Sheet automatically.
-Example sheet: <https://docs.google.com/spreadsheets/d/1N--NwnBmUIDLhIJzZz0mZ5Px4mLBmW4TQXnPpB6hm38/edit?usp=sharing>
+Responses are written to your Google Sheet automatically. Example sheet:  
+ <https://docs.google.com/spreadsheets/d/1N--NwnBmUIDLhIJzZz0mZ5Px4mLBmW4TQXnPpB6hm38/edit?usp=sharing>
 
 ### 5. (Optional) Restrict access by user ID
 
