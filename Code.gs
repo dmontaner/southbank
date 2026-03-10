@@ -41,12 +41,13 @@ function doPost(e) {
 
         const submittedUserId = (data.userId || '').trim();
         if (!submittedUserId) {
-            return ContentService.createTextOutput(JSON.stringify({status: "error", error: "No User ID was provided."}))                .setMimeType(ContentService.MimeType.JSON);
+            return ContentService.createTextOutput(JSON.stringify({status: "error", error: "No User ID was provided."}))
+            .setMimeType(ContentService.MimeType.JSON);
         }
         const authError = checkUserAuthorization(submittedUserId);
         if (authError) {
             return ContentService.createTextOutput(JSON.stringify({status: "error", error: authError}))
-                .setMimeType(ContentService.MimeType.JSON);
+            .setMimeType(ContentService.MimeType.JSON);
         }
 
         const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_SHEET_NAME);
@@ -71,6 +72,7 @@ function doPost(e) {
         sheet.appendRow(row);
         return ContentService.createTextOutput(JSON.stringify({status: "ok"}))
             .setMimeType(ContentService.MimeType.JSON);
+
     } catch (err) {
         return ContentService.createTextOutput(JSON.stringify({status: "error", error: err.toString()}))
             .setMimeType(ContentService.MimeType.JSON);
