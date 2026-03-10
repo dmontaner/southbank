@@ -554,8 +554,11 @@
                 const DeploymentID = userResponses.organizationId;
                 if (!DeploymentID) return;
                 const SCRIPT_URL = `https://script.google.com/macros/s/${DeploymentID}/exec`;
+                const startTime = performance.now();
                 await fetch(SCRIPT_URL, { method: 'GET' });
-                console.log('Apps Script warmed up');
+                const endTime = performance.now();
+                const duration = (endTime - startTime).toFixed(2);
+                console.log(`Apps Script warmed up in ${duration}ms`);
             } catch (e) {
                 // Silently ignore — this is best-effort only
             }

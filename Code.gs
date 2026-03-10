@@ -1,6 +1,7 @@
+// Configuration
+const DATA_SHEET_NAME = "Sheet1";
+
 function doGet(e) {
-    // Responds to GET requests — used to warm up the script container
-    // before the user submits, to avoid cold start delays.
     return ContentService.createTextOutput(JSON.stringify({status: "ok", message: "warm"}))
         .setMimeType(ContentService.MimeType.JSON);
 }
@@ -8,7 +9,7 @@ function doGet(e) {
 function doPost(e) {
     try {
         const data = e.parameter; // Form data comes in as parameters, not postData
-        const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Sheet1");
+        const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(DATA_SHEET_NAME);
         const questionIds = [
             "consent_timestamp",
             "consent",
