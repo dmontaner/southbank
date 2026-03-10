@@ -64,8 +64,8 @@ Responses are written to your Google Sheet automatically. Example sheet:
 
 ## Restrict access by user ID (Recommended)
 
-Your Google Apps Script is **open** fro anyone with the **Deployment ID** to send data in.
-This has undesirable potential effects in your data collection but more importantly may imply some security risks. 
+Your Google Apps Script is **open** for anyone with the **Deployment ID** to send data in.
+This can corrupt your data collection and may pose security risks. 
 
 You can allow only specific users to submit responses:
 
@@ -73,9 +73,8 @@ You can allow only specific users to submit responses:
 2. Add a column header **`UserId`** in cell A1.
 3. List one allowed user ID per row below the header.
 
-This will check that the userid is valid before letting the data be written to the spreadsheet.
-You generate the user ids and keep them confidential. Just let the corresponding user know its own.
-If you send the URL with the corresponding org and the user ids to each individual
-the web page will populate the corresponding fields in the consent form.
+This validates the user ID before writing data to the spreadsheet.
+Generate the user IDs yourself and share each one only with the corresponding participant.
+When you include both `org` and `user` in the URL, the consent form fields are pre-filled automatically.
 
 **If no `Users` sheet exists, all user IDs are accepted.**
