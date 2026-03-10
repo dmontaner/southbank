@@ -333,7 +333,7 @@
             Start Questionnaire
         </button>
         
-        <div class="loading" id="loading">
+        <div class="loading" id="loading" style="display: block;">
             <div class="spinner"></div>
             Loading...
         </div>
@@ -400,6 +400,11 @@
         
         // Call initialization when page loads
         window.addEventListener('DOMContentLoaded', initializePage);
+        
+        // Hide spinner once all images/resources are fully loaded
+        window.addEventListener('load', () => {
+            document.getElementById('loading').style.display = 'none';
+        });
         
         function toggleCheckbox(event) {
             // Only toggle if clicking on the container itself, not checkbox or label
