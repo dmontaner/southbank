@@ -53,7 +53,7 @@ https://www.dmontaner.com/southbank/?org=YOUR_DEPLOYMENT_ID&user=USER_ID
 This may be important for authorization. See the "Restrict access" section below.
 
 URL example without user id:  
-https://www.dmontaner.com/southbank/?org=?org=AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o
+https://www.dmontaner.com/southbank/?org=AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o
 
 URL example with user id:  
 https://www.dmontaner.com/southbank/?org=AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o&user=david
