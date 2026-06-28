@@ -461,8 +461,11 @@
             }
         }
 
-        // Switch from review view to done view
-        function showDoneView(isError, errorMessage) {
+        // Switch from review view to done view.
+        // `errorMessage` is the short human-readable message; `diagnostics` (optional)
+        // is an object of extra technical details rendered in a copy-able box so the
+        // user can send us an informative screenshot.
+        function showDoneView(isError, errorMessage, diagnostics) {
             // Hide review, show done
             document.getElementById('reviewView').style.display = 'none';
             document.getElementById('doneView').style.display = 'block';
@@ -482,7 +485,39 @@
                 errorDetails.textContent = errorMessage;
                 document.getElementById('doneMessage').parentNode.insertBefore(errorDetails, document.getElementById('doneMessage').nextSibling);
 
-                document.getElementById('doneSecondaryMessage').textContent = 'Please try again or contact support if the problem persists.';
+                // Add a copy-able diagnostics box so a screenshot is informative for support.
+                const details = {
+                    'Error': errorMessage,
+                    'Organization ID': userResponses.organizationId || '(none)',
+                    'User ID': userResponses.userId || '(none)',
+                    'Time': new Date().toString(),
+                    'Page': window.location.href,
+                    ...(diagnostics || {})
+                };
+                const diagText = Object.entries(details)
+                    .map(([k, v]) => `${k}: ${v}`)
+                    .join('\n');
+
+                const diagBox = document.createElement('pre');
+                diagBox.id = 'errorDiagnostics';
+                diagBox.textContent = diagText;
+                diagBox.style.textAlign = 'left';
+                diagBox.style.whiteSpace = 'pre-wrap';
+                diagBox.style.wordBreak = 'break-word';
+                diagBox.style.background = '#f8d7da';
+                diagBox.style.color = '#842029';
+                diagBox.style.border = '1px solid #f5c2c7';
+                diagBox.style.borderRadius = '8px';
+                diagBox.style.padding = '16px';
+                diagBox.style.margin = '20px auto 0';
+                diagBox.style.maxWidth = '600px';
+                diagBox.style.fontFamily = 'monospace';
+                diagBox.style.fontSize = '13px';
+                diagBox.style.lineHeight = '1.5';
+                errorDetails.parentNode.insertBefore(diagBox, errorDetails.nextSibling);
+
+                document.getElementById('doneSecondaryMessage').textContent =
+                    'Please try again or contact support if the problem persists.';
             }
 
             // Scroll to top so the user sees the result
@@ -522,7 +557,11 @@
 
             submitBtn.disabled = true;
             loading.style.display = 'block';
-            
+
+            // Track these across the try/catch so the error diagnostics can report them.
+            let httpStatus = 'n/a';
+            let rawResponse = 'n/a';
+
             try {
                 const SCRIPT_URL = `https://script.google.com/macros/s/${DeploymentID}/exec`;
                 console.log('Submitting to URL:', SCRIPT_URL);
@@ -543,12 +582,14 @@
                 });
                 
                 const response = await Promise.race([fetchPromise, timeoutPromise]);
-                
+
+                httpStatus = response.status;
                 console.log('Response received, status:', response.status);
-                
+
                 let result;
                 try {
                     const responseText = await response.text();
+                    rawResponse = responseText;
                     console.log('Response text:', responseText);
                     result = JSON.parse(responseText);
                 } catch (parseError) {
@@ -576,8 +617,14 @@
             } catch (error) {
                 console.error('Error submitting responses:', error);
                 loading.style.display = 'none';
-                // Show done view with error inline (no page reload)
-                showDoneView(true, error.message);
+                // Show done view with error inline (no page reload), including
+                // technical diagnostics so the user can send an informative screenshot.
+                showDoneView(true, error.message, {
+                    'HTTP status': httpStatus,
+                    'Server response': (rawResponse && rawResponse.length > 500)
+                        ? rawResponse.slice(0, 500) + '… (truncated)'
+                        : rawResponse
+                });
             }
         }
         
