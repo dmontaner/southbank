@@ -53,13 +53,13 @@ https://www.dmontaner.com/southbank/?org=YOUR_DEPLOYMENT_ID&user=USER_ID
 This may be important for authorization. See the "Restrict access" section below.
 
 URL example without user id:  
-https://www.dmontaner.com/southbank/?org=AKfycbxbYlGknELKkwceKtffzaMlPbWKK87uo4GMGwXZ9-2APVFL6rf2hB8dVIPoWeV-3UfcNg
+https://www.dmontaner.com/southbank/?org=?org=AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o
 
 URL example with user id:  
-https://www.dmontaner.com/southbank/?org=AKfycbxbYlGknELKkwceKtffzaMlPbWKK87uo4GMGwXZ9-2APVFL6rf2hB8dVIPoWeV-3UfcNg&user=david
+https://www.dmontaner.com/southbank/?org=AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o&user=david
 
 Responses are written to your Google Sheet automatically. Example sheet:  
- <https://docs.google.com/spreadsheets/d/1N--NwnBmUIDLhIJzZz0mZ5Px4mLBmW4TQXnPpB6hm38/edit?usp=sharing>
+ <https://docs.google.com/spreadsheets/d/1CrtZclmA2KvcSuCTcPp-aWo5cyTB367OF3j7DZQwkTM/edit?usp=sharing>
 
 
 ## Restrict access by user ID (Recommended)
