@@ -77,6 +77,19 @@
             word-break: break-word;
         }
         
+        .validation-banner {
+            display: none;
+            background-color: #f8d7da;
+            color: #842029;
+            border: 1px solid #f5c2c7;
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-top: 30px;
+            font-weight: 600;
+            text-align: center;
+            line-height: 1.5;
+        }
+
         .nav-buttons {
             display: flex;
             gap: 15px;
@@ -315,6 +328,8 @@
             <div id="answersContainer"></div>
         </div>
         
+        <div class="validation-banner" id="validationBanner"></div>
+
         <div class="nav-buttons">
             <button class="back-btn" onclick="goBack()">← Back to Questionnaire</button>
             <button class="submit-btn" id="submitBtn" onclick="submitResponses()">Submit All Responses</button>
@@ -485,6 +500,25 @@
                 showDoneView(true, 'No Organization ID was provided. Please go back to the start page and enter a valid Organization ID. You may need to request a new valid URL from your organizatio.');
                 return;
             }
+
+            // Validate that all mandatory questions (1 to 13, the scale/checkbox ones)
+            // have been answered. Questions 14 and 15 (free text) are optional.
+            const MANDATORY_KEYS = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13'];
+            const missing = MANDATORY_KEYS.filter(key =>
+                userResponses[key] === undefined || userResponses[key] === null || userResponses[key] === ''
+            );
+            const banner = document.getElementById('validationBanner');
+            if (missing.length > 0) {
+                const missingNumbers = missing.map(key => parseInt(key, 10)).join(', ');
+                const message = 'Please answer all questions before submitting. Missing question(s): ' + missingNumbers;
+                console.log(message);
+                banner.textContent = message;
+                banner.style.display = 'block';
+                banner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+            // All mandatory questions answered: clear any previous validation message.
+            banner.style.display = 'none';
 
             submitBtn.disabled = true;
             loading.style.display = 'block';
