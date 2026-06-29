@@ -1,10 +1,7 @@
 # Southbank
 
-A lightweight web questionnaire for the
+A lightweight web questionnaire form for the
 **"Southbank Centre Creative Community Wellbeing Scale"**.
-
-Live site: https://www.dmontaner.com/southbank/
-
 
 ## Set up for your own organization
 
@@ -31,7 +28,7 @@ Go to [Google Sheets](https://docs.google.com/spreadsheets/) and create a new bl
    - If you see *"Google hasn't verified this app"*, click **Advanced** → **Go to [project name] (unsafe)**.
    - Review the permissions and click **Allow**.
 7. Copy the **Deployment ID** — it looks like:  
-   `AKfycbxbYlGknELKkwceKtffzaMlPbWKK87uo4GMGwXZ9-2APVFL6rf2hB8dVIPoWeV-3UfcNg`
+   `AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o`
 
 
 ## Using the questionnaire
@@ -39,24 +36,22 @@ Go to [Google Sheets](https://docs.google.com/spreadsheets/) and create a new bl
 Share the URL with your **Deployment ID** as the `org` parameter:
 
 ```
-https://www.dmontaner.com/southbank/?org=YOUR_DEPLOYMENT_ID
+https://ccws-southbank.web.app/?org=YOUR_DEPLOYMENT_ID
 ```
 
 This is how the web site *knows* where to send the data.
 
 You can also pre-fill the User ID by adding a `user` parameter:
 
-```
-https://www.dmontaner.com/southbank/?org=YOUR_DEPLOYMENT_ID&user=USER_ID
-```
+<code>https://ccws-southbank.web.app/<span style="background:#ffd7d5">?</span><span style="background:#fff3bf">org=</span>YOUR_DEPLOYMENT_ID<span style="background:#ffd7d5">&</span><span style="background:#fff3bf">user=</span>USER_ID</code>
 
-This may be important for authorization. See the "Restrict access" section below.
+This may be important for authorization. See the **Restrict access** section below.
 
 URL example without user id:  
-https://www.dmontaner.com/southbank/?org=AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o
+https://ccws-southbank.web.app/?org=AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o
 
 URL example with user id:  
-https://www.dmontaner.com/southbank/?org=AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o&user=david
+https://ccws-southbank.web.app/?org=AKfycbw9iBdblXLffSF1U2lhuaF-69WyFGjvoBhvpn0byifWopPqwi9z3EJoCefqJLuI2-o&user=david
 
 Responses are written to your Google Sheet automatically. Example sheet:  
  <https://docs.google.com/spreadsheets/d/1CrtZclmA2KvcSuCTcPp-aWo5cyTB367OF3j7DZQwkTM/edit?usp=sharing>
