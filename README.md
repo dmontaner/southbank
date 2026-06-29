@@ -35,13 +35,17 @@ Go to [Google Sheets](https://docs.google.com/spreadsheets/) and create a new bl
 
 Share the URL with your **Deployment ID** as the `org` parameter:
 
-`https://ccws-southbank.web.app/?org=`**`YOUR_DEPLOYMENT_ID`**
+```
+https://ccws-southbank.web.app/?org=YOUR_DEPLOYMENT_ID
+```
 
 This is how the web site *knows* where to send the data.
 
 You can also pre-fill the User ID by adding a `user` parameter:
 
-`https://ccws-southbank.web.app/?org=`**`YOUR_DEPLOYMENT_ID`**`&user=`**`USER_ID`**
+```
+https://ccws-southbank.web.app/?org=YOUR_DEPLOYMENT_ID&user=USER_ID
+```
 
 This may be important for authorization. See the **Restrict access** section below.
 
