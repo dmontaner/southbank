@@ -120,6 +120,36 @@
         .nav-btn:active {
             transform: scale(0.95);
         }
+
+        .nav-btn.inactive {
+            background-color: rgba(0, 0, 0, 0.25);
+            box-shadow: none;
+        }
+
+        .nav-btn.inactive:hover {
+            background-color: rgba(0, 0, 0, 0.25);
+            transform: none;
+        }
+
+        .answer-hint {
+            display: none;
+            position: fixed;
+            bottom: 190px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            z-index: 1500;
+            white-space: nowrap;
+            animation: pulse 0.3s ease;
+        }
+
+        .answer-hint.visible {
+            display: block;
+        }
         
         .prev-btn {
             left: 30px;
@@ -280,7 +310,8 @@
     <button class="nav-btn prev-btn" id="prevBtn" onclick="previousPage()" style="display: none;">← Previous</button>
     <button class="nav-btn next-btn" id="nextBtn" onclick="nextPage()">Next →</button>
     <button class="nav-btn next-btn" id="feedbackBtn" onclick="goToFeedback()" style="display: none;">Next →</button>
-    
+    <div class="answer-hint" id="answerHint">Please select an answer to continue</div>
+
     <div id="pagesContainer"></div>
     
     <div class="loading" id="loading">
@@ -378,11 +409,49 @@
             // Check for page parameter in URL
             const urlParams = new URLSearchParams(window.location.search);
             const pageParam = urlParams.get('page');
-            const startPage = pageParam ? parseInt(pageParam) - 1 : 0;
-            
+            let startPage = pageParam ? parseInt(pageParam) - 1 : 0;
+            if (isNaN(startPage) || startPage < 0) startPage = 0;
+
+            // Never start beyond the first unanswered question
+            startPage = Math.min(startPage, firstUnansweredPage(), images.length - 1);
+
             // Show specified page or first page
             showPage(startPage);
         });
+
+        // Answer guard: pages with checkbox-style overlays require an answer
+        // before the user can move forward. Pages without overlays are free.
+        function isCurrentPageAnswered() {
+            return isPageAnswered(currentPage);
+        }
+
+        function isPageAnswered(index) {
+            const overlays = imageOverlays[index];
+            if (!overlays || overlays.length === 0) return true;
+            return userResponses[overlays[0].question] !== undefined;
+        }
+
+        function firstUnansweredPage() {
+            for (let i = 0; i < images.length; i++) {
+                if (!isPageAnswered(i)) return i;
+            }
+            return images.length - 1;
+        }
+
+        let hintTimeout = null;
+        function showAnswerHint() {
+            const hint = document.getElementById('answerHint');
+            hint.classList.remove('visible');
+            void hint.offsetWidth; // restart the animation on repeated attempts
+            hint.classList.add('visible');
+            clearTimeout(hintTimeout);
+            hintTimeout = setTimeout(() => hint.classList.remove('visible'), 2000);
+        }
+
+        function hideAnswerHint() {
+            clearTimeout(hintTimeout);
+            document.getElementById('answerHint').classList.remove('visible');
+        }
 
         // Handle overlay selection
         function selectOverlay(overlayId, question) {
@@ -406,10 +475,17 @@
             star.style.top = imageOverlays[currentPage].find(ov => ov.id === overlay.id).starTop;
             star.style.left = imageOverlays[currentPage].find(ov => ov.id === overlay.id).starLeft;
             star.classList.add('visible');
+
+            hideAnswerHint();
+            updateButton();
         }
         
         // Navigate to extra.html for feedback
         function goToFeedback() {
+            if (!isCurrentPageAnswered()) {
+                showAnswerHint();
+                return;
+            }
             document.getElementById('loading').style.display = 'block';
             setTimeout(() => {
                 window.location.href = 'extra.html';
@@ -434,11 +510,16 @@
             // Show current page
             document.getElementById(`page-${index}`).classList.add('active');
             currentPage = index;
+            hideAnswerHint();
             updateCounter();
             updateButton();
         }
         
         function nextPage() {
+            if (!isCurrentPageAnswered()) {
+                showAnswerHint();
+                return;
+            }
             if (currentPage < images.length - 1) {
                 showPage(currentPage + 1);
             }
@@ -478,6 +559,11 @@
                 nextBtn.style.display = 'block';
                 feedbackBtn.style.display = 'none';
             }
+
+            // Dim the forward button until the current question is answered
+            const answered = isCurrentPageAnswered();
+            nextBtn.classList.toggle('inactive', !answered);
+            feedbackBtn.classList.toggle('inactive', !answered);
         }
 
         // Keyboard navigation
