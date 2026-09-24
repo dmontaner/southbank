@@ -334,7 +334,7 @@
                 <span id="reviewSelfDescription" style="white-space: pre-wrap;">-</span>
             </div>
             <div class="review-item">
-                <strong>Participation:</strong>
+                <strong>New or returning participant:</strong>
                 <span id="reviewParticipation">-</span>
             </div>
             <div class="review-item">
@@ -440,7 +440,9 @@
             document.getElementById('reviewOrgId').textContent = userResponses.organizationId || '-';
             document.getElementById('reviewUserId').textContent = userResponses.userId || '-';
             document.getElementById('reviewAgeBand').textContent = userResponses.ageBand || '-';
-            document.getElementById('reviewGender').textContent = userResponses.gender || '-';
+            document.getElementById('reviewGender').textContent = userResponses.genderSelfDescription
+                ? `${userResponses.gender}: ${userResponses.genderSelfDescription}`
+                : (userResponses.gender || '-');
             document.getElementById('reviewEthnicity').textContent = userResponses.ethnicity || '-';
             document.getElementById('reviewSelfDescription').textContent = userResponses.selfDescription || '-';
             document.getElementById('reviewParticipation').textContent = userResponses.participation || '-';

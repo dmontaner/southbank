@@ -63,6 +63,7 @@ function doPost(e) {
             "userId",
             "ageBand",
             "gender",
+            "genderSelfDescription",
             "ethnicity",
             "selfDescription",
             "participation",
