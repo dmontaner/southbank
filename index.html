@@ -137,6 +137,11 @@
             color: #333;
             font-size: 15px;
         }
+
+        .input-group label .optional {
+            font-weight: 400;
+            color: #888;
+        }
         
         .input-group input[type="text"] {
             padding: 12px 15px;
@@ -162,6 +167,89 @@
         .input-group input[type="text"]:read-only:focus {
             border-color: #dee2e6;
             box-shadow: none;
+        }
+
+        .input-group select,
+        .input-group textarea {
+            padding: 12px 15px;
+            font-size: 16px;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            font-family: inherit;
+            background-color: #fff;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .input-group select {
+            cursor: pointer;
+            appearance: none;
+            -webkit-appearance: none;
+            background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23555' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'><polyline points='6 9 12 15 18 9'/></svg>");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            padding-right: 40px;
+        }
+
+        .input-group select:invalid {
+            color: #757575;
+        }
+
+        .input-group textarea {
+            min-height: 100px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .radio-group input[type="radio"] {
+            position: absolute;
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .radio-group label {
+            flex: 1 1 0;
+            min-width: 120px;
+            padding: 12px 15px;
+            font-size: 16px;
+            font-weight: 500;
+            text-align: center;
+            color: #333;
+            background-color: #fff;
+            border: 2px solid #dee2e6;
+            border-radius: 50px;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.3s ease;
+        }
+
+        .radio-group label:hover {
+            border-color: #007bff;
+            background-color: #f8f9ff;
+        }
+
+        .radio-group input[type="radio"]:checked + label {
+            color: #fff;
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+
+        .radio-group input[type="radio"]:focus-visible + label {
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.3);
         }
         
         .start-button {
@@ -320,6 +408,56 @@
                 <label for="userId">User ID</label>
                 <input type="text" id="userId" placeholder="Enter your User ID">
             </div>
+
+            <div class="input-group">
+                <label id="ageBandLabel">Age band</label>
+                <div class="radio-group" role="radiogroup" aria-labelledby="ageBandLabel">
+                    <input type="radio" name="ageBand" id="ageBand1" value="11-15" onchange="updateButton()">
+                    <label for="ageBand1">11&ndash;15</label>
+                    <input type="radio" name="ageBand" id="ageBand2" value="16-25" onchange="updateButton()">
+                    <label for="ageBand2">16&ndash;25</label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="gender">How would you describe your gender?</label>
+                <select id="gender" required onchange="updateButton()">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Man">Man</option>
+                    <option value="Woman">Woman</option>
+                    <option value="Non-binary">Non-binary</option>
+                    <option value="Prefer not to say">Prefer not to say</option>
+                    <option value="Prefer to self-describe">Prefer to self-describe</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="ethnicity">How would you describe your ethnic or cultural background?</label>
+                <select id="ethnicity" required onchange="updateButton()">
+                    <option value="" disabled selected>Select an option</option>
+                    <option value="Asian/Asian British/Asian Welsh">Asian/Asian British/Asian Welsh</option>
+                    <option value="Black/Black British/Black Welsh/Caribbean/African">Black/Black British/Black Welsh/Caribbean/African</option>
+                    <option value="Mixed/Multiple ethnic groups">Mixed/Multiple ethnic groups</option>
+                    <option value="White">White</option>
+                    <option value="Other ethnic group">Other ethnic group</option>
+                    <option value="Not recorded">Not recorded</option>
+                </select>
+            </div>
+
+            <div class="input-group">
+                <label for="selfDescription">How would you describe yourself? <span class="optional">(optional)</span></label>
+                <textarea id="selfDescription" rows="4" placeholder="Write as much or as little as you like"></textarea>
+            </div>
+
+            <div class="input-group">
+                <label id="participationLabel">Participation</label>
+                <div class="radio-group" role="radiogroup" aria-labelledby="participationLabel">
+                    <input type="radio" name="participation" id="participation1" value="New to programme" onchange="updateButton()">
+                    <label for="participation1">New to programme</label>
+                    <input type="radio" name="participation" id="participation2" value="Continuing" onchange="updateButton()">
+                    <label for="participation2">Continuing</label>
+                </div>
+            </div>
         </div>
 
         <div class="checkbox-container" onclick="toggleCheckbox(event)">
@@ -390,14 +528,32 @@
                 sessionStorage.setItem('userResponses', JSON.stringify(userResponses));
             }
             
+            // Initialize demographic fields from any stored values
+            setRadioValue('ageBand', userResponses.ageBand);
+            document.getElementById('gender').value = userResponses.gender || '';
+            document.getElementById('ethnicity').value = userResponses.ethnicity || '';
+            document.getElementById('selfDescription').value = userResponses.selfDescription || '';
+            setRadioValue('participation', userResponses.participation);
+
             // Initialize consent checkbox
             const consentCheckbox = document.getElementById('consentCheckbox');
             if (userResponses.consent === true) {
                 consentCheckbox.checked = true;
-                updateButton();
             }
+            updateButton();
         }
         
+        function getRadioValue(name) {
+            const checked = document.querySelector(`input[name="${name}"]:checked`);
+            return checked ? checked.value : '';
+        }
+
+        function setRadioValue(name, value) {
+            if (!value) return;
+            const radio = document.querySelector(`input[name="${name}"][value="${value}"]`);
+            if (radio) radio.checked = true;
+        }
+
         // Call initialization when page loads
         window.addEventListener('DOMContentLoaded', initializePage);
         
@@ -416,11 +572,20 @@
             updateButton();
         }
         
+        // All fields that must be filled in before the questionnaire can start.
+        // "How would you describe yourself?" is optional.
+        function mandatoryFieldsComplete() {
+            return getRadioValue('ageBand') !== ''
+                && document.getElementById('gender').value !== ''
+                && document.getElementById('ethnicity').value !== ''
+                && getRadioValue('participation') !== '';
+        }
+
         function updateButton() {
             const checkbox = document.getElementById('consentCheckbox');
             const button = document.getElementById('startButton');
             
-            if (checkbox.checked) {
+            if (checkbox.checked && mandatoryFieldsComplete()) {
                 button.classList.add('enabled');
                 button.disabled = false;
             } else {
@@ -431,7 +596,7 @@
         
         function startQuestionnaire() {
             const checkbox = document.getElementById('consentCheckbox');
-            if (checkbox.checked) {
+            if (checkbox.checked && mandatoryFieldsComplete()) {
                 const organizationId = document.getElementById('organizationId').value;
                 const userId = document.getElementById('userId').value;
                 
@@ -449,6 +614,11 @@
                 // Update only the consent page fields, preserve all other answers
                 userResponses.organizationId = organizationId;
                 userResponses.userId = userId;
+                userResponses.ageBand = getRadioValue('ageBand');
+                userResponses.gender = document.getElementById('gender').value;
+                userResponses.ethnicity = document.getElementById('ethnicity').value;
+                userResponses.selfDescription = document.getElementById('selfDescription').value.trim();
+                userResponses.participation = getRadioValue('participation');
                 userResponses.consent = true;
                 userResponses.consent_timestamp = new Date().toISOString();
                 
