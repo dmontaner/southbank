@@ -141,11 +141,6 @@
             color: #333;
             font-size: 15px;
         }
-
-        .input-group label .optional {
-            font-weight: 400;
-            color: #888;
-        }
         
         .input-group input[type="text"] {
             padding: 12px 15px;
@@ -173,8 +168,7 @@
             box-shadow: none;
         }
 
-        .input-group select,
-        .input-group textarea {
+        .input-group select {
             padding: 12px 15px;
             font-size: 16px;
             border: 2px solid #dee2e6;
@@ -199,14 +193,7 @@
             color: #757575;
         }
 
-        .input-group textarea {
-            min-height: 100px;
-            resize: vertical;
-            line-height: 1.5;
-        }
-
-        .input-group select:focus,
-        .input-group textarea:focus {
+        .input-group select:focus {
             outline: none;
             border-color: #007bff;
             box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
@@ -454,11 +441,6 @@
             </div>
 
             <div class="input-group">
-                <label for="selfDescription">How would you describe yourself? <span class="optional">(optional)</span></label>
-                <textarea id="selfDescription" rows="4" placeholder="Write as much or as little as you like"></textarea>
-            </div>
-
-            <div class="input-group">
                 <label id="participationLabel">Are you new to this programme or a returning participant?</label>
                 <div class="radio-group" role="radiogroup" aria-labelledby="participationLabel">
                     <input type="radio" name="participation" id="participation1" value="New" onchange="updateButton()">
@@ -543,7 +525,6 @@
             toggleGenderSelfDescribe();
             document.getElementById('genderSelfDescribe').value = userResponses.genderSelfDescription || '';
             document.getElementById('ethnicity').value = userResponses.ethnicity || '';
-            document.getElementById('selfDescription').value = userResponses.selfDescription || '';
             setRadioValue('participation', userResponses.participation);
 
             // Initialize consent checkbox
@@ -592,7 +573,6 @@
         }
         
         // All fields that must be filled in before the questionnaire can start.
-        // "How would you describe yourself?" is optional.
         function mandatoryFieldsComplete() {
             const gender = document.getElementById('gender').value;
             const genderOk = gender !== ''
@@ -642,7 +622,6 @@
                     ? document.getElementById('genderSelfDescribe').value.trim()
                     : '';
                 userResponses.ethnicity = document.getElementById('ethnicity').value;
-                userResponses.selfDescription = document.getElementById('selfDescription').value.trim();
                 userResponses.participation = getRadioValue('participation');
                 userResponses.consent = true;
                 userResponses.consent_timestamp = new Date().toISOString();

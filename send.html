@@ -330,10 +330,6 @@
                 <span id="reviewEthnicity">-</span>
             </div>
             <div class="review-item">
-                <strong>How you describe yourself:</strong>
-                <span id="reviewSelfDescription" style="white-space: pre-wrap;">-</span>
-            </div>
-            <div class="review-item">
                 <strong>New or returning participant:</strong>
                 <span id="reviewParticipation">-</span>
             </div>
@@ -444,7 +440,6 @@
                 ? `${userResponses.gender}: ${userResponses.genderSelfDescription}`
                 : (userResponses.gender || '-');
             document.getElementById('reviewEthnicity').textContent = userResponses.ethnicity || '-';
-            document.getElementById('reviewSelfDescription').textContent = userResponses.selfDescription || '-';
             document.getElementById('reviewParticipation').textContent = userResponses.participation || '-';
             document.getElementById('reviewConsent').textContent = userResponses.consent ? 'Yes' : 'No';
             
