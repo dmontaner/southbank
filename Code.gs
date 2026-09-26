@@ -18,6 +18,25 @@ const QUESTION_IDS = [
 
 const HEADERS = ["timestamp", ...QUESTION_IDS];
 
+// Google Sheets stores a header typed or appended as "01" as the number 1.
+// Normalise so that 1, "1" and "01" all compare equal to the question id "01".
+function normalizeHeader(h) {
+    const s = String(h === null || h === undefined ? '' : h).trim();
+    return /^\d+$/.test(s) ? s.padStart(2, '0') : s;
+}
+
+function readHeaders(sheet) {
+    if (sheet.getLastRow() === 0 || sheet.getLastColumn() === 0) return [];
+    return sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0].map(normalizeHeader);
+}
+
+// Write headers as plain text (number format "@") so "01" stays "01".
+function writeHeaders(sheet, startCol, headers) {
+    sheet.getRange(1, startCol, 1, headers.length)
+        .setNumberFormat('@')
+        .setValues([headers]);
+}
+
 /**
  * One-off setup. Run this manually from the Apps Script editor
  * (select "setup" in the function dropdown and click Run).
@@ -40,14 +59,13 @@ function setup() {
     }
 
     if (sheet.getLastRow() === 0) {
-        sheet.appendRow(HEADERS);
+        writeHeaders(sheet, 1, HEADERS);
         log.push(`Wrote ${HEADERS.length} headers to "${DATA_SHEET_NAME}".`);
     } else {
-        const existing = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
-            .map(h => String(h).trim());
+        const existing = readHeaders(sheet);
         const missing = HEADERS.filter(h => !existing.includes(h));
         if (missing.length > 0) {
-            sheet.getRange(1, existing.length + 1, 1, missing.length).setValues([missing]);
+            writeHeaders(sheet, existing.length + 1, missing);
             log.push(`Appended missing headers to "${DATA_SHEET_NAME}": ${missing.join(", ")}.`);
         } else {
             log.push(`Headers in "${DATA_SHEET_NAME}" already up to date.`);
@@ -143,13 +161,12 @@ function doPost(e) {
 
         // Add headers row if the sheet is empty
         if (sheet.getLastRow() === 0) {
-            sheet.appendRow(HEADERS);
+            writeHeaders(sheet, 1, HEADERS);
         }
 
         // Write each value under its header, so older sheets whose columns are
         // in a different order (or missing some) still get the right data.
-        const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0]
-            .map(h => String(h).trim());
+        const headers = readHeaders(sheet);
         const row = new Array(headers.length).fill('');
         const tsCol = headers.indexOf("timestamp");
         if (tsCol !== -1) row[tsCol] = new Date();
