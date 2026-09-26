@@ -78,7 +78,7 @@ URL example with user id:
 https://ccws-southbank.web.app/?org=AKfycbwg4U0CnSi4z28vIuK7QHaE5Yn4UePwTPxui7Xhoyay7IbhOiI7jhGT7QHby6gg__TB6A&user=david
 
 Responses are written to your Google Sheet automatically. Example sheet:  
- <https://docs.google.com/spreadsheets/d/1CrtZclmA2KvcSuCTcPp-aWo5cyTB367OF3j7DZQwkTM/edit?usp=sharing>
+ <https://docs.google.com/spreadsheets/d/1Kk3WkzOEDvrUBaf66fkKc0unD_MIABH14ROAYXYWr2Y/edit?usp=sharing>
 
 
 ## Restrict access by user ID (Recommended)
